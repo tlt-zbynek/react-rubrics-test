@@ -26,13 +26,15 @@ body {
   display: flex;
   background-color: DodgerBlue;
   align-content: stretch;
+  align-items: center;
   padding: 10px;
 }
 
 .cell {
   display: flex;
+  align-items: center;
   color: black;
-  background-color: #f1f1f1;
+  background-color: inherit;
   margin: 5px;
   /*padding: 5px;*/
   font-size: 20px;
@@ -43,15 +45,14 @@ body {
   background-color: inherit;
 }
 
-.center {
-  align-items: center;
-  justify-content: center;
-}
-
 textarea {
   height: 100%;
   width: 100%;
   font-size: inherit;
   flex: 1;
+}
+
+button {
+  /*height: 22px;*/
 }
 

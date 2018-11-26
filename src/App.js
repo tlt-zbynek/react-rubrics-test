@@ -30,7 +30,7 @@ class App extends Component {
         const rows = [...this.state.rows];
         const ratingsLength = rows[row].ratings.length;
 
-        switch(col) {
+        switch (col) {
             case "criteria":
                 const newCriteria = e.target.value;
                 rows[row].criteria_title = newCriteria;
@@ -46,7 +46,7 @@ class App extends Component {
                 newRatings[col] = e.target.value;
                 rows[row].ratings = newRatings;
                 // update the points if the last item of ratings was changed
-                if(parseInt(col) === ratingsLength - 1) {
+                if (parseInt(col) === ratingsLength - 1) {
                     rows[row].points = e.target.value;
                 }
         }
@@ -112,15 +112,18 @@ class App extends Component {
     renderRows = (rows) => {
         return rows.map((row, i) => {
             const criteriaCell = <CellFixed width={critWidth}><textarea value={row.criteria_title}
-                                                                        onChange={this.handleTxtChange} row={i} col="criteria"/></CellFixed>;
+                                                                        onChange={this.handleTxtChange} row={i}
+                                                                        col="criteria"/></CellFixed>;
             const ratingsLength = row.ratings.length;
             const mappedCells = row.ratings.map((rating, j) => {
-                const textArea = <textarea value={rating} onChange={this.handleTxtChange}  row={i} col={j}/>;
+                const textArea = <textarea value={rating} onChange={this.handleTxtChange} row={i} col={j}/>;
 
-                return (j != ratingsLength - 1) ? <CellStretch>{textArea}
-                    <button onClick={this.handleAddNewCell} row={i} col={j}>+</button>
-                    <button onClick={this.handleRemoveCell} row={i} col={j}>-</button>
-                </CellStretch> : <CellStretch>{textArea}</CellStretch>;
+                return (j != ratingsLength - 1) ? (
+                    <CellStretch>{textArea}
+                        <button onClick={this.handleAddNewCell} row={i} col={j}>+</button>
+                        <button onClick={this.handleRemoveCell} row={i} col={j}>-</button>
+                    </CellStretch>
+                ) : <CellStretch>{textArea}</CellStretch>;
             });
             const ptsCell = <CellFixed width={ptsWidth}><textarea value={row.points}
                                                                   onChange={this.handleTxtChange} row={i} col="points"/></CellFixed>;
