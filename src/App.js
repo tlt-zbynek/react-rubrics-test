@@ -7,12 +7,17 @@ import FlexTable from './rubric/FlexTable';
 
 import './App.css';
 
+import { faHome, faPlusCircle, faMinusCircle, faTimesCircle } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+
 const critWidth = "200px";
 const ptsWidth = "100px";
 
 class App extends Component {
     constructor(props) {
         super(props);
+
         this.state = {
             headerRow: ["Criteria", "Ratings", "Pts", ""],
             rows: [
@@ -21,6 +26,7 @@ class App extends Component {
             ]
         };
     }
+
 
     handleTxtChange = (e) => {
         console.log("input changed value: ", e.target.value);
@@ -55,9 +61,13 @@ class App extends Component {
     };
 
     handleAddNewCell = (e) => {
-        const row = e.target.getAttribute("row");
-        const col = e.target.getAttribute("col");
+        e.preventDefault();
+        console.log('adding cell');
+        console.log(e);
+        const row = e.currentTarget.getAttribute("row");
+        const col = e.currentTarget.getAttribute("col");
         console.log("row,col: ", row + "," + col);
+
         const rows = [...this.state.rows];
         const newRatings = [...this.state.rows[row].ratings];
         console.log("ratings: ", newRatings);
@@ -69,9 +79,12 @@ class App extends Component {
     };
 
     handleRemoveCell = (e) => {
-        const row = e.target.getAttribute("row");
-        const col = e.target.getAttribute("col");
+        e.preventDefault();
+        console.log('removing cell');
+        const row = e.currentTarget.getAttribute("row");
+        const col = e.currentTarget.getAttribute("col");
         console.log("row,col: ", row + "," + col);
+
         const newRatings = [...this.state.rows[row].ratings];
         console.log("ratings: ", newRatings);
         // make sure there are at least 2 cells for min and max
@@ -119,15 +132,16 @@ class App extends Component {
                 const textArea = <textarea value={rating} onChange={this.handleTxtChange} row={i} col={j}/>;
 
                 return (j != ratingsLength - 1) ? (
-                    <CellStretch>{textArea}
-                        <button onClick={this.handleAddNewCell} row={i} col={j}>+</button>
-                        <button onClick={this.handleRemoveCell} row={i} col={j}>-</button>
+                    <CellStretch>
+                        {textArea}
+                        <button className="btn" onClick={this.handleAddNewCell} row={i} col={j}><FontAwesomeIcon icon={faPlusCircle}/></button>
+                        <button className="btn" onClick={this.handleRemoveCell} row={i} col={j}><FontAwesomeIcon icon={faMinusCircle}/></button>
                     </CellStretch>
                 ) : <CellStretch>{textArea}</CellStretch>;
             });
             const ptsCell = <CellFixed width={ptsWidth}><textarea value={row.points}
                                                                   onChange={this.handleTxtChange} row={i} col="points"/></CellFixed>;
-            const removeRowButton = <button onClick={this.handleRemoveRow} row={i}>X</button>;
+            const removeRowButton = <button className="btn" onClick={this.handleRemoveRow} row={i}><FontAwesomeIcon icon={faTimesCircle}/></button>;
             return (
                 <div>
                     <Row>
@@ -146,12 +160,14 @@ class App extends Component {
                         {this.renderHeaderRow()}
                         {this.renderRows(this.state.rows)}
                         <button onClick={this.handleAddNewRow}>
-                            Add Row
+                            Add Criteria
                         </button>
                     </FlexTable>
 
                 </header>
             </div>
+
+
         );
     }
 }

@@ -5,7 +5,7 @@ body {
 }
 
 .App-header {
-  background-color: lightsalmon;
+  background-color: #FFFFFF;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -18,13 +18,13 @@ body {
 .flex-table {
   width: 80%;
   min-width: fit-content;
-  background-color: brown;
+  background-color: #EEEEEE;
   padding: 10px;
 }
 
 .flex-row {
   display: flex;
-  background-color: DodgerBlue;
+  background-color: #bbbbbb;
   align-content: stretch;
   align-items: center;
   padding: 10px;
@@ -54,5 +54,21 @@ textarea {
 
 button {
   /*height: 22px;*/
+  font-size: 18px;
+}
+
+.btn {
+  /*background-color: DodgerBlue;*/
+  padding: 0;
+  border: none;
+  background: none;
+  color: #FFFFFF;
+  /*padding: 12px 16px;*/
+  cursor: pointer;
+}
+
+/* Darker background on mouse-over */
+.btn:hover {
+  color: #888888;
 }
 
