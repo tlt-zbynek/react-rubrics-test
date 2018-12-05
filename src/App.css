@@ -72,3 +72,6 @@ button {
   color: #888888;
 }
 
+input[type=number] {
+  width: 3em
+}

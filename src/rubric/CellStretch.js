@@ -1,7 +1,7 @@
 import React from 'react';
 
-const divStyle =  {
-        width: "100%"
+const divStyle = {
+    width: "100%"
 };
 
 const CellStretch = (props) => {

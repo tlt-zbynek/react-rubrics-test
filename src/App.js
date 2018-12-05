@@ -7,8 +7,8 @@ import FlexTable from './rubric/FlexTable';
 
 import './App.css';
 
-import { faHome, faPlusCircle, faMinusCircle, faTimesCircle } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faCheckCircle, faPlusCircle, faMinusCircle, faTimesCircle} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 
 const critWidth = "200px";
@@ -19,77 +19,135 @@ class App extends Component {
         super(props);
 
         this.state = {
+            existValue: null,
             headerRow: ["Criteria", "Ratings", "Pts", ""],
             rows: [
-                {criteria_title: "criteria", ratings: ["11", "12"], points: 12},
-                {criteria_title: "criteria", ratings: ["21", "22", "23"], points: 23}
+                {criteria_title: "criteria 1", ratings: [11, 12], points: 12},
+                {criteria_title: "criteria 2", ratings: [21, 22, 23], points: 23}
             ]
         };
     }
 
+    averageNewCellValue(row, col) {
+        const rowInd = parseInt(row);
+        const colInd = parseInt(col);
+        const leftVal = this.state.rows[rowInd].ratings[colInd];
+        const rightVal = this.state.rows[rowInd].ratings[colInd + 1];
 
-    handleTxtChange = (e) => {
-        console.log("input changed value: ", e.target.value);
-        const row = e.target.getAttribute("row");
-        const col = e.target.getAttribute("col");
-        console.log("row,col: ", row + "," + col);
+        return (leftVal + rightVal) / 2;
+    }
+
+    forceRange(min, max, currVal) {
+        if (min && currVal < min)
+            return min;
+        if (max && currVal > max)
+            return max;
+        return currVal;
+    }
+
+    getMin(rowInd, colInd) {
+        console.log("rowInd, colInd: ", rowInd + ", " + colInd);
+        return colInd - 1 >= 0 ? this.state.rows[rowInd].ratings[colInd - 1] + 1 : 0;
+    }
+
+    getMax(rowInd, colInd) {
+        return this.state.rows[rowInd].ratings[colInd + 1] - 1;
+    }
+
+    handlePointsOnBlur = (e) => {
+        const rowInd = parseInt(e.target.getAttribute("row"));
+        const min = parseInt(e.target.getAttribute("min"));
         const rows = [...this.state.rows];
-        const ratingsLength = rows[row].ratings.length;
+        const ratingsLength = rows[rowInd].ratings.length;
+        const newPts = this.forceRange(min, null, parseInt(e.target.value));
 
-        switch (col) {
-            case "criteria":
-                const newCriteria = e.target.value;
-                rows[row].criteria_title = newCriteria;
-                break;
-            case "points":
-                const newPts = e.target.value;
-                rows[row].points = newPts;
-                // update the last item of criteria to have it equal
-                rows[row].ratings[ratingsLength - 1] = newPts;
-                break;
-            default:
-                const newRatings = [...this.state.rows[row].ratings];
-                newRatings[col] = e.target.value;
-                rows[row].ratings = newRatings;
-                // update the points if the last item of ratings was changed
-                if (parseInt(col) === ratingsLength - 1) {
-                    rows[row].points = e.target.value;
-                }
+        rows[rowInd].points = newPts;
+        // update the last item of criteria to have it equal
+        rows[rowInd].ratings[ratingsLength - 1] = newPts;
+        this.setState({rows});
+    }
+
+    handleRatingsOnBlur = (e) => {
+        const rowInd = parseInt(e.target.getAttribute("row"));
+        const colInd = parseInt(e.target.getAttribute("col"));
+        const min = parseInt(e.target.getAttribute("min"));
+        const max = parseInt(e.target.getAttribute("max"));
+        const rows = [...this.state.rows];
+        const ratingsLength = rows[rowInd].ratings.length;
+        const newRatings = [...this.state.rows[rowInd].ratings];
+        const newValue =  this.forceRange(min, max, parseInt(e.target.value));
+
+        newRatings[colInd] = newValue;
+        rows[rowInd].ratings = newRatings;
+        // update the points if the last item of ratings was changed
+        if (colInd === ratingsLength - 1) {
+            rows[rowInd].points = newValue;
         }
+        this.setState({rows});
+    }
 
+    handleCriteriaChange = (e) => {
+        const rowInd = parseInt(e.target.getAttribute("row"));
+        const rows = [...this.state.rows];
+        const newCriteria = e.target.value;
+
+        rows[rowInd].criteria_title = newCriteria;
+        this.setState({rows});
+    };
+
+    handlePointsChange = (e) => {
+        const rowInd = parseInt(e.target.getAttribute("row"));
+        const min = parseInt(e.target.getAttribute("min"));
+        const rows = [...this.state.rows];
+        const ratingsLength = rows[rowInd].ratings.length;
+        const newPts = parseInt(e.target.value); //this.forceRange(min, null, parseInt(e.target.value));
+
+        rows[rowInd].points = newPts;
+        // update the last item of criteria to have it equal
+        rows[rowInd].ratings[ratingsLength - 1] = newPts;
+        this.setState({rows});
+    };
+
+    handleRatingChange = (e) => {
+        const rowInd = parseInt(e.target.getAttribute("row"));
+        const colInd = parseInt(e.target.getAttribute("col"));
+        const min = parseInt(e.target.getAttribute("min"));
+        const max = parseInt(e.target.getAttribute("max"));
+        const rows = [...this.state.rows];
+        const ratingsLength = rows[rowInd].ratings.length;
+        const newRatings = [...this.state.rows[rowInd].ratings];
+        const newValue =  parseInt(e.target.value); //this.forceRange(min, max, parseInt(e.target.value));
+
+        newRatings[colInd] = newValue;
+        rows[rowInd].ratings = newRatings;
+        // update the points if the last item of ratings was changed
+        if (colInd === ratingsLength - 1) {
+            rows[rowInd].points = newValue;
+        }
         this.setState({rows});
     };
 
     handleAddNewCell = (e) => {
         e.preventDefault();
-        console.log('adding cell');
-        console.log(e);
-        const row = e.currentTarget.getAttribute("row");
-        const col = e.currentTarget.getAttribute("col");
-        console.log("row,col: ", row + "," + col);
-
+        const row = parseInt(e.currentTarget.getAttribute("row"));
+        const col = parseInt(e.currentTarget.getAttribute("col"));
         const rows = [...this.state.rows];
         const newRatings = [...this.state.rows[row].ratings];
-        console.log("ratings: ", newRatings);
-        const insertAt = (parseInt(col) + 1);
-        newRatings.splice(insertAt, 0, "Set Marks");
-        console.log("ratings updated at " + insertAt + ": ", newRatings);
+        const insertAt = (col + 1);
+        newRatings.splice(insertAt, 0, this.averageNewCellValue(row, col));
         rows[row].ratings = newRatings;
         this.setState({rows});
     };
 
     handleRemoveCell = (e) => {
         e.preventDefault();
-        console.log('removing cell');
-        const row = e.currentTarget.getAttribute("row");
-        const col = e.currentTarget.getAttribute("col");
-        console.log("row,col: ", row + "," + col);
+        const row = parseInt(e.currentTarget.getAttribute("row"));
+        const col = parseInt(e.currentTarget.getAttribute("col"));
 
         const newRatings = [...this.state.rows[row].ratings];
-        console.log("ratings: ", newRatings);
         // make sure there are at least 2 cells for min and max
         if (newRatings.length > 2) {
-            const removeAt = parseInt(col);
+            const removeAt = col;
             newRatings.splice(removeAt, 1);
             console.log("ratings updated at " + removeAt + ": ", newRatings);
             const rows = [...this.state.rows];
@@ -99,15 +157,14 @@ class App extends Component {
     };
 
     handleRemoveRow = (e) => {
-        console.log(e.target.getAttribute("row"));
         const rows = [...this.state.rows];
-        rows.splice(e.target.getAttribute("row"), 1);
+        rows.splice(parseInt(e.target.getAttribute("row")), 1);
         this.setState({rows});
     };
 
     handleAddNewRow = () => {
         console.log("new row added");
-        const defaultRow = {criteria_title: "criteria", points: "Full Marks", ratings: ["No Marks", "Full Marks"]};
+        const defaultRow = {criteria_title: "new criteria", points: 1, ratings: [0, 1]};
         this.setState({rows: [...this.state.rows, defaultRow]});
     };
 
@@ -125,23 +182,41 @@ class App extends Component {
     renderRows = (rows) => {
         return rows.map((row, i) => {
             const criteriaCell = <CellFixed width={critWidth}><textarea value={row.criteria_title}
-                                                                        onChange={this.handleTxtChange} row={i}
-                                                                        col="criteria"/></CellFixed>;
+                                                                        onChange={this.handleCriteriaChange}
+                                                                        row={i}/></CellFixed>;
             const ratingsLength = row.ratings.length;
             const mappedCells = row.ratings.map((rating, j) => {
-                const textArea = <textarea value={rating} onChange={this.handleTxtChange} row={i} col={j}/>;
-
                 return (j != ratingsLength - 1) ? (
                     <CellStretch>
-                        {textArea}
-                        <button className="btn" onClick={this.handleAddNewCell} row={i} col={j}><FontAwesomeIcon icon={faPlusCircle}/></button>
-                        <button className="btn" onClick={this.handleRemoveCell} row={i} col={j}><FontAwesomeIcon icon={faMinusCircle}/></button>
+                        <input type="number"
+                               min={this.getMin(i, j)}
+                               max={this.getMax(i, j)}
+                               value={rating}
+                               onChange={this.handleRatingChange}
+                               onBlur={this.handleRatingsOnBlur}
+                               row={i}
+                               col={j}/>
+                        <button className="btn" onClick={this.handleAddNewCell} row={i} col={j}><FontAwesomeIcon
+                            icon={faPlusCircle}/></button>
+                        <button className="btn" onClick={this.handleRemoveCell} row={i} col={j}><FontAwesomeIcon
+                            icon={faMinusCircle}/></button>
                     </CellStretch>
-                ) : <CellStretch>{textArea}</CellStretch>;
+                ) : <CellStretch><input type="number"
+                                        min={this.getMin(i, j)}
+                                        value={rating}
+                                        onChange={this.handleRatingChange}
+                                        onBlur={this.handleRatingsOnBlur}
+                                        row={i}
+                                        col={j}/></CellStretch>;
             });
-            const ptsCell = <CellFixed width={ptsWidth}><textarea value={row.points}
-                                                                  onChange={this.handleTxtChange} row={i} col="points"/></CellFixed>;
-            const removeRowButton = <button className="btn" onClick={this.handleRemoveRow} row={i}><FontAwesomeIcon icon={faTimesCircle}/></button>;
+            const ptsCell = <CellFixed width={ptsWidth}><input type="number"
+                                                               min={this.getMin(i, ratingsLength - 1)}
+                                                               value={row.points}
+                                                               onChange={this.handlePointsChange}
+                                                               onBlur={this.handlePointsOnBlur}
+                                                               row={i}/></CellFixed>;
+            const removeRowButton = <button className="btn" onClick={this.handleRemoveRow} row={i}><FontAwesomeIcon
+                icon={faTimesCircle}/></button>;
             return (
                 <div>
                     <Row>
