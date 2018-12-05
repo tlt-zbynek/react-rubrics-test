@@ -181,7 +181,7 @@ class App extends Component {
 
     renderRows = (rows) => {
         return rows.map((row, i) => {
-            const criteriaCell = <CellFixed width={critWidth}><textarea value={row.criteria_title}
+            const criteriaCell = <CellFixed width={critWidth}><textarea rows="1" value={row.criteria_title}
                                                                         onChange={this.handleCriteriaChange}
                                                                         row={i}/></CellFixed>;
             const ratingsLength = row.ratings.length;

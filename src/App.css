@@ -46,7 +46,6 @@ body {
 }
 
 textarea {
-  height: 100%;
   width: 100%;
   font-size: inherit;
   flex: 1;
@@ -73,5 +72,6 @@ button {
 }
 
 input[type=number] {
-  width: 3em
+  width: 3em;
+  font-size: inherit;
 }
