@@ -273,7 +273,7 @@ class App extends Component {
                                    row={i}
                                    col={j}/>
                         </div>
-                    </CellStretch>
+                     </CellStretch>
                 );
             });
             const ptsCell = (
