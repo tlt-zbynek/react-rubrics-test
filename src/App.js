@@ -219,12 +219,14 @@ class App extends Component {
     renderRows = (rows) => {
         const styleButton = {
             width: "1.5em",
-            margin: "2px",
-            borderColor: "#ffffff"
+            // padding: "3px",
+            margin: "5px",
+            // borderColor: "#ffffff"
         };
         const styleCell = {
             border: "solid 1px",
-            borderColor: "#ffffff"
+            borderColor: "#ffffff",
+            padding: "5px"
         };
         return rows.map((row, i) => {
             const criteriaCell = (
@@ -239,8 +241,8 @@ class App extends Component {
             const mappedCells = row.ratings.map((rating, j) => {
                 return (j != ratingsLength - 1) ? (
                     <CellStretch style={styleCell}>
-                        <div>
-                            <textarea rows={"1"} cols={"8"} value={rows[i].ratings[j].rating_title} onChange={this.handleRatingTitleChange}  row={i} col={j}/>
+                        <div style={{width: "100%", padding: "5px"}}>
+                            <textarea rows={"1"} value={rows[i].ratings[j].rating_title} onChange={this.handleRatingTitleChange}  row={i} col={j}/>
                             <label>Set Pts: </label>
                             <input type="number"
                                    min={this.getMin(i, j)}
@@ -260,7 +262,7 @@ class App extends Component {
                     </CellStretch>
                 ) : (
                     <CellStretch style={styleCell}>
-                        <div>
+                        <div style={{width: "100%", padding: "5px"}}>
                             <textarea rows={"1"}  value={rows[i].ratings[j].rating_title} onChange={this.handleRatingTitleChange}  row={i} col={j}/>
                             <label>Set Pts: </label>
                             <input type="number"

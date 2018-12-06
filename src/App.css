@@ -49,7 +49,9 @@ body {
 textarea {
   width: 100%;
   font-size: inherit;
-  flex: 1;
+  /*flex: 1;*/
+  /*margin: 10px;*/
+  /*margin: 5px;*/
 }
 
 button {

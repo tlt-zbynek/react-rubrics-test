@@ -2,7 +2,7 @@ import React from 'react';
 
 const divStyle = {
     width: "100%",
-    padding: "4px",
+    // padding: "4px",
     textAlign: "center"
     // alignItems: "center"
     // alignContent: "center"
