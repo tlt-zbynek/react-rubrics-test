@@ -1,12 +1,16 @@
 import React from 'react';
 
 const divStyle = {
-    width: "100%"
+    width: "100%",
+    padding: "4px",
+    textAlign: "center"
+    // alignItems: "center"
+    // alignContent: "center"
 };
 
 const CellStretch = (props) => {
     return (
-        <div className={(props.className ? props.className + " " : "") + "cell"} style={divStyle}>{props.children}</div>
+        <div className={(props.className ? props.className + " " : "") + "cell"} style={props.style ? {...props.style, ...divStyle}: divStyle}>{props.children}</div>
     );
 };
 
